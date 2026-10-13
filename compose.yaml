@@ -1,0 +1,61 @@
+services:
+  garage:
+    image: dxflrs/garage:v2.4.1
+    restart: unless-stopped
+    user: "1000:1000"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    tmpfs:
+      - /tmp
+    environment:
+      - GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET}
+      - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
+      - GARAGE_METRICS_TOKEN=${GARAGE_METRICS_TOKEN}
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      - ${DATA_ROOT:?set DATA_ROOT in .env}/garage/meta:/var/lib/garage/meta
+      - ${DATA_ROOT:?set DATA_ROOT in .env}/garage/data:/var/lib/garage/data
+
+  tailscale:
+    image: tailscale/tailscale:v1.102.5
+    container_name: tailscale
+    hostname: garage
+    restart: unless-stopped
+    user: "1000:1000"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    tmpfs:
+      - /tmp
+      - /run
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=true
+    volumes:
+      - ${DATA_ROOT:?set DATA_ROOT in .env}/tailscale:/var/lib/tailscale
+    cap_drop:
+      - ALL
+
+  newt:
+    image: fosrl/newt:1.18.1
+    container_name: newt
+    restart: unless-stopped
+    user: "1000:1000"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    tmpfs:
+      - /tmp
+    environment:
+      - PANGOLIN_ENDPOINT=${PANGOLIN_ENDPOINT}
+      - NEWT_ID=${NEWT_ID}
+      - NEWT_SECRET=${NEWT_SECRET}

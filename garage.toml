@@ -1,0 +1,57 @@
+# Garage configuration
+# Reference: https://garagehq.deuxfleurs.fr/documentation/reference-manual/configuration/
+# Mounted read-only at /etc/garage.toml by compose.yaml.
+
+# --- Storage -----------------------------------------------------------------
+
+# Metadata (LMDB database). Keep on fast storage (SSD) if possible.
+metadata_dir = "/var/lib/garage/meta"
+
+# Object data blocks.
+data_dir = "/var/lib/garage/data"
+
+# Metadata engine: "lmdb" (recommended) or "sqlite".
+db_engine = "lmdb"
+
+# Periodic metadata snapshots, useful for recovering from LMDB corruption.
+metadata_auto_snapshot_interval = "6h"
+
+# Zstd compression level for stored blocks (1-19, or "none").
+compression_level = 2
+
+# --- Cluster -----------------------------------------------------------------
+
+# Number of copies of each object. Use 1 for a single-node setup.
+replication_factor = 1
+
+# Shared secret for node-to-node RPC is set via GARAGE_RPC_SECRET (see .env).
+
+# Address the RPC server listens on inside the container.
+rpc_bind_addr = "[::]:3901"
+
+# Address other nodes use to reach this one.
+rpc_public_addr = "127.0.0.1:3901"
+
+# --- S3 API ------------------------------------------------------------------
+
+[s3_api]
+# Region name clients must use (most S3 clients need this set explicitly).
+s3_region = "garage"
+api_bind_addr = "[::]:3900"
+# Enables virtual-host style requests: <bucket>.s3.example.com
+root_domain = ".s3.example.com"
+
+# --- Static website hosting (optional) ---------------------------------------
+
+[s3_web]
+bind_addr = "[::]:3902"
+# Buckets are served at <bucket>.web.example.com
+root_domain = ".web.example.com"
+index = "index.html"
+
+# --- Admin API ---------------------------------------------------------------
+
+[admin]
+api_bind_addr = "[::]:3903"
+# Admin and metrics tokens are set via GARAGE_ADMIN_TOKEN and
+# GARAGE_METRICS_TOKEN (see .env).
