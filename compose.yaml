@@ -37,6 +37,7 @@ services:
       - TS_AUTHKEY=${TS_AUTHKEY}
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=true
+      - TS_EXTRA_ARGS=--login-server=${TS_LOGIN_SERVER:?set TS_LOGIN_SERVER in .env}
     volumes:
       - ${DATA_ROOT:?set DATA_ROOT in .env}/tailscale:/var/lib/tailscale
     cap_drop:

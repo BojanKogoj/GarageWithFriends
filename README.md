@@ -8,7 +8,7 @@ object storage server, run with Docker Compose.
 | Service     | Purpose                                                                             |
 | ----------- | ----------------------------------------------------------------------------------- |
 | `garage`    | S3-compatible object storage.                                                       |
-| `tailscale` | Joins the host to your Tailscale network for private access.                        |
+| `tailscale` | Joins the host to your tailnet for private access, through a custom coordination server such as Headscale. |
 | `newt`      | Tunnel client for [Pangolin](https://github.com/fosrl/pangolin), for public access. |
 
 All containers run as an unprivileged user (`1000:1000`) with a read-only root
