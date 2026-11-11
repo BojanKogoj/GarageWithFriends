@@ -26,6 +26,7 @@ services:
     environment:
       - API_BASE_URL=http://garage:3903
       - S3_ENDPOINT_URL=http://garage:3900
+      - API_ADMIN_KEY=${GARAGE_ADMIN_TOKEN}
 
   tailscale:
     image: tailscale/tailscale:v1.102.5
