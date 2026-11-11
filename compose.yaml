@@ -13,6 +13,7 @@ services:
       - ${DATA_ROOT:?set DATA_ROOT in .env}/garage/meta:/var/lib/garage/meta
       - ${DATA_ROOT:?set DATA_ROOT in .env}/garage/data:/var/lib/garage/data
     network_mode: service:tailscale
+
   garage-webui:
     image: khairul169/garage-webui:1.1.0
     container_name: webui
