@@ -1,26 +1,15 @@
-# Garage
+# Garage With Friends
 
-A self-hosted, single-node [Garage](https://garagehq.deuxfleurs.fr/) S3-compatible
-object storage server, run with Docker Compose.
+Simple docker compose stack for a self-hosted S3 cluster. Contains the following components:
 
-## Services
+- [Garage](https://garagehq.deuxfleurs.fr/) - an S3-compatible object storage server.
+- [Newt](https://github.com/fosrl/newt) - a Pangolin site client.
+- [Tailscale](https://tailscale.com/) - a Tailscale client.
 
-| Service     | Purpose                                                                             |
-| ----------- | ----------------------------------------------------------------------------------- |
-| `garage`    | S3-compatible object storage.                                                       |
-| `tailscale` | Joins the host to your tailnet for private access, through a custom coordination server such as Headscale. |
-| `newt`      | Tunnel client for [Pangolin](https://github.com/fosrl/pangolin), for public access. |
+Bring your own:
 
-All containers run as an unprivileged user (`1000:1000`) with a read-only root
-filesystem, all capabilities dropped and `no-new-privileges` set.
-
-## Files
-
-| File           | Contents                                                    |
-| -------------- | ----------------------------------------------------------- |
-| `compose.yaml` | Service definitions.                                        |
-| `garage.toml`  | Garage configuration. Contains no secrets.                  |
-| `example.env`  | Template for `.env`, which holds secrets and the data path. |
+- Pangolin instance, cloud or self-hosted.
+- Tailscale coordination server, or Headscale for self-hosted variant.
 
 ## Setup
 
@@ -72,17 +61,21 @@ filesystem, all capabilities dropped and `no-new-privileges` set.
    docker compose exec garage /garage bucket allow --read --write my-bucket --key my-key
    ```
 
+## Services
+
+| Service        | Purpose                                           |
+|----------------|---------------------------------------------------|
+| `garage`       | S3-compatible object storage.                     |
+| `garage-webui` | Admin dashboard for Garage.                       |
+| `tailscale`    | For p2p between the nodes via tailnet.            |
+| `newt`         | Tunnel client for Pangolin, for public s3 access. |
+
 ## Ports
 
 | Port | Purpose                          |
-| ---- | -------------------------------- |
+|------|----------------------------------|
 | 3900 | S3 API                           |
 | 3901 | Node-to-node RPC                 |
 | 3902 | Static website hosting           |
 | 3903 | Admin API and Prometheus metrics |
-
-No ports are published on the host. Access goes through Tailscale or Pangolin.
-
-## License
-
-[MIT](LICENSE)
+| 3909 | Garage admin dashboard           |
